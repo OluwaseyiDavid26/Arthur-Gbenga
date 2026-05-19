@@ -80,113 +80,95 @@ function useInView(threshold = 0.15) {
     return () => observer.disconnect();
   }, [threshold]);
   return { ref, visible };
-}
 
-function GalleryCard({
-  image,
-  index,
-}: {
-  image: (typeof galleryImages)[0];
-  index: number;
-}) {
-  const { ref, visible } = useInView(0.1);
-  const [hovered, setHovered] = useState(false);
+  function GalleryCard({
+    image,
+    index,
+  }: {
+    image: (typeof galleryImages)[0];
+    index: number;
+  }) {
+    const { ref, visible } = useInView(0.1);
+    const [hovered, setHovered] = useState(false);
 
-  return (
-    <div
-      ref={ref}
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        gridColumn: image.span === "wide" ? "span 2" : "span 1",
-        gridRow: image.span === "tall" ? "span 2" : "span 1",
-        aspectRatio:
-          image.span === "wide"
-            ? "16/7"
-            : image.span === "tall"
-              ? "3/4"
-              : "1/1",
-        opacity: visible ? 1 : 0,
-        transform: visible
-          ? "translateY(0) scale(1)"
-          : "translateY(20px) scale(0.98)",
-        transition: `opacity 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s, transform 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s`,
-        cursor: "pointer",
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <img
-        src={image.src}
-        // alt={image.caption}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          transform: hovered ? "scale(1.06)" : "scale(1)",
-          filter: hovered
-            ? "brightness(0.7) saturate(1.1)"
-            : "brightness(0.75) saturate(0.95)",
-          transition:
-            "transform 0.7s cubic-bezier(.22,.68,0,1.2), filter 0.5s ease",
-          display: "block",
-        }}
-      />
+    const isVideo = image.src.endsWith(".mp4");
 
-      {/* Gold shimmer overlay on hover */}
+    const mediaStyle: React.CSSProperties = {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      transform: hovered ? "scale(1.06)" : "scale(1)",
+      filter: hovered
+        ? "brightness(0.7) saturate(1.1)"
+        : "brightness(0.75) saturate(0.95)",
+      transition:
+        "transform 0.7s cubic-bezier(.22,.68,0,1.2), filter 0.5s ease",
+      display: "block",
+    };
+
+    return (
       <div
+        ref={ref}
         style={{
-          position: "absolute",
-          inset: 0,
-          background: hovered
-            ? "linear-gradient(135deg, rgba(201,169,110,0.12) 0%, transparent 60%)"
-            : "transparent",
-          transition: "background 0.5s ease",
+          position: "relative",
+          overflow: "hidden",
+          gridColumn: image.span === "wide" ? "span 2" : "span 1",
+          gridRow: image.span === "tall" ? "span 2" : "span 1",
+          aspectRatio:
+            image.span === "wide"
+              ? "16/5" // ← increased height (was 16/7)
+              : image.span === "tall"
+                ? "3/4"
+                : "1/1",
+          opacity: visible ? 1 : 0,
+          transform: visible
+            ? "translateY(0) scale(1)"
+            : "translateY(20px) scale(0.98)",
+          transition: `opacity 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s, transform 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s`,
+          cursor: "pointer",
         }}
-      />
-
-      {/* Caption on hover */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: "1.5rem",
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
-          opacity: hovered ? 1 : 0,
-          transform: hovered ? "translateY(0)" : "translateY(8px)",
-          transition: "opacity 0.4s ease, transform 0.4s ease",
-        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
-        {/* <p
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "0.9rem",
-            fontStyle: "italic",
-            fontWeight: 300,
-            color: "#E8C98A",
-            margin: 0,
-          }}
-        >
-          {image.caption}
-        </p> */}
-      </div>
+        {isVideo ? (
+          <video
+            src={image.src}
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={mediaStyle}
+          />
+        ) : (
+          <img src={image.src} style={mediaStyle} />
+        )}
 
-      {/* Gold border bottom — always visible */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "1px",
-          background: `linear-gradient(to right, transparent, #C9A96E44, transparent)`,
-        }}
-      />
-    </div>
-  );
+        {/* Gold shimmer overlay on hover */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: hovered
+              ? "linear-gradient(135deg, rgba(201,169,110,0.12) 0%, transparent 60%)"
+              : "transparent",
+            transition: "background 0.5s ease",
+          }}
+        />
+
+        {/* Gold border bottom */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "1px",
+            background: `linear-gradient(to right, transparent, #C9A96E44, transparent)`,
+          }}
+        />
+      </div>
+    );
+  }
 }
 
 export default function The40Page() {
