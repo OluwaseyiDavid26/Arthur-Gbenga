@@ -41,7 +41,7 @@ const awards = [
 // ── Milestones updated based on verified online info ──
 const milestones = [
   {
-    year: "2017",
+    year: "2020",
     title: "Aristo Afrikana — The Beginning",
     description:
       "Founded Aristo Games & Bistro on Airport Road, Oba-Ile, Akure — a cultural dining landmark celebrating local food, music, art, and community.",
