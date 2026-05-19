@@ -5,65 +5,65 @@ import { useEffect, useRef, useState } from "react";
 // ── Replace with real birthday celebration images ──
 const galleryImages = [
   {
-    src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=900&q=80",
+    src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191984/SnapInsta.to_653454024_18573754195022340_6120809082290932376_n_yxzr1v.jpg",
     span: "wide", // wide card
     caption: "The night began",
   },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191983/SnapInsta.to_662273449_18431833966184605_8490369440126939593_n_snwcoa.jpg",
+  //   span: "tall",
+  //   caption: "Forty looks good",
+  // },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191983/SnapInsta.to_661312451_18320583874255063_387309862780609744_n_tijdjz.jpg",
+  //   span: "normal",
+  //   caption: "Surrounded by love",
+  // },
   {
-    src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=700&q=80",
-    span: "tall",
-    caption: "Forty looks good",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=700&q=80",
-    span: "normal",
-    caption: "Surrounded by love",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1567696153798-9111f9cd3d0d?w=700&q=80",
+    src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191985/SnapInsta.to_502455212_18508096000022340_2715075682461337838_n_prelye.jpg",
     span: "normal",
     caption: "The cake moment",
   },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191985/SnapInsta.to_622420590_17956955079058610_6752413390193351686_n_ysvdkw.jpg",
+  //   span: "wide",
+  //   caption: "The whole squad",
+  // },
   {
-    src: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=900&q=80",
-    span: "wide",
-    caption: "The whole squad",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1496337589254-7e19d01cec44?w=700&q=80",
+    src: "https://res.cloudinary.com/du9kb43d6/video/upload/v1779192019/SnapInsta.to_AQN6eeMKF4g4gmnHHAy2ZOOAiHptSn3a2Cc1RlS_1tFLpV-dZ8zP_fXldc4NLDLJdxfH0bYUjEYvZhZuDcrOw7uMXW6N8HPMKJ17CrI_tym5lp.mp4",
     span: "normal",
     caption: "Pure joy",
   },
   {
-    src: "https://images.unsplash.com/photo-1543269664-56d93c1b41a6?w=700&q=80",
+    src: "https://res.cloudinary.com/du9kb43d6/video/upload/v1779192052/SnapInsta.to_AQNRjwBqVnZcNsCBqX4DssLtQfeOR7pxZXtowMALCeBCKqeaYBPVvU9bYoWjcfgFbeGuVF8JBqqon8_tgg4pvMpKTR2IpVbCONvyIFk_kjrmfk.mp4",
     span: "normal",
     caption: "Family first",
   },
-  {
-    src: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=700&q=80",
-    span: "tall",
-    caption: "The man of the hour",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=900&q=80",
-    span: "wide",
-    caption: "The celebration",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=700&q=80",
-    span: "normal",
-    caption: "Dancing into 40",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=700&q=80",
-    span: "normal",
-    caption: "Good vibes only",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?w=700&q=80",
-    span: "normal",
-    caption: "Toast to 40",
-  },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191984/SnapInsta.to_652752129_18090179825166669_6198461109628450833_n_fwtomn.jpg",
+  //   span: "tall",
+  //   caption: "The man of the hour",
+  // },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191984/SnapInsta.to_623799235_18073959971105230_5699193985291803192_n_fin4ft.jpg",
+  //   span: "wide",
+  //   caption: "The celebration",
+  // },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779192392/SnapInsta.to_648313531_18096261553812544_7088950938231052573_n_usk1mj.jpg",
+  //   span: "normal",
+  //   caption: "Dancing into 40",
+  // },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779192392/SnapInsta.to_641779072_18107680225814062_6752189994119706617_n_cvxsxz.jpg",
+  //   span: "normal",
+  //   caption: "Good vibes only",
+  // },
+  // {
+  //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779192392/SnapInsta.to_619235932_18119501500603445_2069364028074035926_n_vd0rlo.jpg",
+  //   span: "normal",
+  //   caption: "Toast to 40",
+  // },
 ];
 
 function useInView(threshold = 0.15) {
@@ -118,7 +118,7 @@ function GalleryCard({
     >
       <img
         src={image.src}
-        alt={image.caption}
+        // alt={image.caption}
         style={{
           width: "100%",
           height: "100%",
@@ -160,7 +160,7 @@ function GalleryCard({
           transition: "opacity 0.4s ease, transform 0.4s ease",
         }}
       >
-        <p
+        {/* <p
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: "0.9rem",
@@ -171,7 +171,7 @@ function GalleryCard({
           }}
         >
           {image.caption}
-        </p>
+        </p> */}
       </div>
 
       {/* Gold border bottom — always visible */}
