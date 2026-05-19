@@ -944,7 +944,8 @@ function BTSSection({
 }: {
   section: (typeof sections)[0];
   index: number;
-  sectionRef: React.RefObject<HTMLDivElement>;
+  //   sectionRef: React.RefObject<HTMLDivElement>;
+  sectionRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const { ref: contentRef, visible } = useInView(0.2);
   const [featured, ...grid] = section.media;
