@@ -59,7 +59,7 @@ const milestones = [
       "Opened Madison Restaurant at Alagbaka, Akure — a bold, flavour-forward concept bringing accessible premium dining to the heart of the city.",
   },
   {
-    year: "2025",
+    year: "2026",
     title: "A Legacy at 40",
     description:
       "Three thriving brands, a growing team across Akure, and a 40th birthday celebration that became the talk of the city — the story is far from over.",
