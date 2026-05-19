@@ -2,33 +2,17 @@
 
 // import { useEffect, useRef, useState } from "react";
 
-// // ── Replace with real birthday celebration images ──
 // const galleryImages = [
 //   {
 //     src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191984/SnapInsta.to_653454024_18573754195022340_6120809082290932376_n_yxzr1v.jpg",
-//     span: "wide", // wide card
+//     span: "wide",
 //     caption: "The night began",
 //   },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191983/SnapInsta.to_662273449_18431833966184605_8490369440126939593_n_snwcoa.jpg",
-//   //   span: "tall",
-//   //   caption: "Forty looks good",
-//   // },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191983/SnapInsta.to_661312451_18320583874255063_387309862780609744_n_tijdjz.jpg",
-//   //   span: "normal",
-//   //   caption: "Surrounded by love",
-//   // },
 //   {
 //     src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191985/SnapInsta.to_502455212_18508096000022340_2715075682461337838_n_prelye.jpg",
 //     span: "normal",
 //     caption: "The cake moment",
 //   },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191985/SnapInsta.to_622420590_17956955079058610_6752413390193351686_n_ysvdkw.jpg",
-//   //   span: "wide",
-//   //   caption: "The whole squad",
-//   // },
 //   {
 //     src: "https://res.cloudinary.com/du9kb43d6/video/upload/v1779192019/SnapInsta.to_AQN6eeMKF4g4gmnHHAy2ZOOAiHptSn3a2Cc1RlS_1tFLpV-dZ8zP_fXldc4NLDLJdxfH0bYUjEYvZhZuDcrOw7uMXW6N8HPMKJ17CrI_tym5lp.mp4",
 //     span: "normal",
@@ -39,33 +23,9 @@
 //     span: "normal",
 //     caption: "Family first",
 //   },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191984/SnapInsta.to_652752129_18090179825166669_6198461109628450833_n_fwtomn.jpg",
-//   //   span: "tall",
-//   //   caption: "The man of the hour",
-//   // },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779191984/SnapInsta.to_623799235_18073959971105230_5699193985291803192_n_fin4ft.jpg",
-//   //   span: "wide",
-//   //   caption: "The celebration",
-//   // },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779192392/SnapInsta.to_648313531_18096261553812544_7088950938231052573_n_usk1mj.jpg",
-//   //   span: "normal",
-//   //   caption: "Dancing into 40",
-//   // },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779192392/SnapInsta.to_641779072_18107680225814062_6752189994119706617_n_cvxsxz.jpg",
-//   //   span: "normal",
-//   //   caption: "Good vibes only",
-//   // },
-//   // {
-//   //   src: "https://res.cloudinary.com/du9kb43d6/image/upload/v1779192392/SnapInsta.to_619235932_18119501500603445_2069364028074035926_n_vd0rlo.jpg",
-//   //   span: "normal",
-//   //   caption: "Toast to 40",
-//   // },
 // ];
 
+// // ── useInView hook (standalone, no nested components) ──
 // function useInView(threshold = 0.15) {
 //   const ref = useRef<HTMLDivElement>(null);
 //   const [visible, setVisible] = useState(false);
@@ -80,95 +40,96 @@
 //     return () => observer.disconnect();
 //   }, [threshold]);
 //   return { ref, visible };
+// }
 
-//   function GalleryCard({
-//     image,
-//     index,
-//   }: {
-//     image: (typeof galleryImages)[0];
-//     index: number;
-//   }) {
-//     const { ref, visible } = useInView(0.1);
-//     const [hovered, setHovered] = useState(false);
+// // ── GalleryCard defined at module level (NOT inside hook) ──
+// function GalleryCard({
+//   image,
+//   index,
+// }: {
+//   image: (typeof galleryImages)[0];
+//   index: number;
+// }) {
+//   const { ref, visible } = useInView(0.1);
+//   const [hovered, setHovered] = useState(false);
 
-//     const isVideo = image.src.endsWith(".mp4");
+//   const isVideo = image.src.endsWith(".mp4");
 
-//     const mediaStyle: React.CSSProperties = {
-//       width: "100%",
-//       height: "100%",
-//       objectFit: "cover",
-//       transform: hovered ? "scale(1.06)" : "scale(1)",
-//       filter: hovered
-//         ? "brightness(0.7) saturate(1.1)"
-//         : "brightness(0.75) saturate(0.95)",
-//       transition:
-//         "transform 0.7s cubic-bezier(.22,.68,0,1.2), filter 0.5s ease",
-//       display: "block",
-//     };
+//   const mediaStyle: React.CSSProperties = {
+//     width: "100%",
+//     height: "100%",
+//     objectFit: "cover",
+//     transform: hovered ? "scale(1.06)" : "scale(1)",
+//     filter: hovered
+//       ? "brightness(0.7) saturate(1.1)"
+//       : "brightness(0.75) saturate(0.95)",
+//     transition: "transform 0.7s cubic-bezier(.22,.68,0,1.2), filter 0.5s ease",
+//     display: "block",
+//   };
 
-//     return (
+//   return (
+//     <div
+//       ref={ref}
+//       style={{
+//         position: "relative",
+//         overflow: "hidden",
+//         gridColumn: image.span === "wide" ? "span 2" : "span 1",
+//         gridRow: image.span === "tall" ? "span 2" : "span 1",
+//         // Wide card: taller ratio so the image isn't cropped thin
+//         aspectRatio:
+//           image.span === "wide"
+//             ? "16/9"
+//             : image.span === "tall"
+//               ? "3/4"
+//               : "1/1",
+//         opacity: visible ? 1 : 0,
+//         transform: visible
+//           ? "translateY(0) scale(1)"
+//           : "translateY(20px) scale(0.98)",
+//         transition: `opacity 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s, transform 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s`,
+//         cursor: "pointer",
+//       }}
+//       onMouseEnter={() => setHovered(true)}
+//       onMouseLeave={() => setHovered(false)}
+//     >
+//       {isVideo ? (
+//         <video
+//           src={image.src}
+//           autoPlay
+//           muted
+//           loop
+//           playsInline
+//           style={mediaStyle}
+//         />
+//       ) : (
+//         <img src={image.src} alt={image.caption} style={mediaStyle} />
+//       )}
+
+//       {/* Gold shimmer overlay on hover */}
 //       <div
-//         ref={ref}
 //         style={{
-//           position: "relative",
-//           overflow: "hidden",
-//           gridColumn: image.span === "wide" ? "span 2" : "span 1",
-//           gridRow: image.span === "tall" ? "span 2" : "span 1",
-//           aspectRatio:
-//             image.span === "wide"
-//               ? "16/5" // ← increased height (was 16/7)
-//               : image.span === "tall"
-//                 ? "3/4"
-//                 : "1/1",
-//           opacity: visible ? 1 : 0,
-//           transform: visible
-//             ? "translateY(0) scale(1)"
-//             : "translateY(20px) scale(0.98)",
-//           transition: `opacity 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s, transform 0.9s cubic-bezier(.22,.68,0,1.2) ${index * 0.06}s`,
-//           cursor: "pointer",
+//           position: "absolute",
+//           inset: 0,
+//           background: hovered
+//             ? "linear-gradient(135deg, rgba(201,169,110,0.12) 0%, transparent 60%)"
+//             : "transparent",
+//           transition: "background 0.5s ease",
 //         }}
-//         onMouseEnter={() => setHovered(true)}
-//         onMouseLeave={() => setHovered(false)}
-//       >
-//         {isVideo ? (
-//           <video
-//             src={image.src}
-//             autoPlay
-//             muted
-//             loop
-//             playsInline
-//             style={mediaStyle}
-//           />
-//         ) : (
-//           <img src={image.src} style={mediaStyle} />
-//         )}
+//       />
 
-//         {/* Gold shimmer overlay on hover */}
-//         <div
-//           style={{
-//             position: "absolute",
-//             inset: 0,
-//             background: hovered
-//               ? "linear-gradient(135deg, rgba(201,169,110,0.12) 0%, transparent 60%)"
-//               : "transparent",
-//             transition: "background 0.5s ease",
-//           }}
-//         />
-
-//         {/* Gold border bottom */}
-//         <div
-//           style={{
-//             position: "absolute",
-//             bottom: 0,
-//             left: 0,
-//             right: 0,
-//             height: "1px",
-//             background: `linear-gradient(to right, transparent, #C9A96E44, transparent)`,
-//           }}
-//         />
-//       </div>
-//     );
-//   }
+//       {/* Gold border bottom */}
+//       <div
+//         style={{
+//           position: "absolute",
+//           bottom: 0,
+//           left: 0,
+//           right: 0,
+//           height: "1px",
+//           background: `linear-gradient(to right, transparent, #C9A96E44, transparent)`,
+//         }}
+//       />
+//     </div>
+//   );
 // }
 
 // export default function The40Page() {
@@ -194,10 +155,6 @@
 //         @keyframes goldPulse {
 //           0%, 100% { opacity: 0.6; }
 //           50%       { opacity: 1; }
-//         }
-//         @keyframes floatUp {
-//           from { opacity: 0; transform: translateY(40px); }
-//           to   { opacity: 1; transform: translateY(0); }
 //         }
 //         @keyframes shimmerSweep {
 //           0%   { background-position: -200% center; }
@@ -239,7 +196,6 @@
 //           overflow: "hidden",
 //         }}
 //       >
-//         {/* Animated confetti dots */}
 //         {[
 //           { size: 4, left: "12%", delay: "0s", dur: "6s", color: "#C9A96E" },
 //           { size: 3, left: "28%", delay: "1.2s", dur: "7s", color: "#E8C98A" },
@@ -284,7 +240,6 @@
 //           />
 //         ))}
 
-//         {/* Background radial glow */}
 //         <div
 //           style={{
 //             position: "absolute",
@@ -302,7 +257,6 @@
 //           }}
 //         />
 
-//         {/* Ghost 40 */}
 //         <div
 //           style={{
 //             position: "absolute",
@@ -323,7 +277,6 @@
 //           40
 //         </div>
 
-//         {/* Content */}
 //         <div style={{ position: "relative", zIndex: 1 }}>
 //           <p
 //             style={{
@@ -341,7 +294,6 @@
 //             A Celebration of Life
 //           </p>
 
-//           {/* Big 40 */}
 //           <div
 //             style={{
 //               opacity: heroVisible ? 1 : 0,
@@ -379,7 +331,6 @@
 //             The Story So Far
 //           </h1>
 
-//           {/* Gold divider */}
 //           <div
 //             style={{
 //               width: heroVisible ? "60px" : "0px",
@@ -409,7 +360,6 @@
 //             was celebrated.
 //           </p>
 
-//           {/* Scroll cue */}
 //           <div
 //             style={{
 //               marginTop: "3rem",
@@ -450,7 +400,6 @@
 //           borderTop: "1px solid #1C1810",
 //         }}
 //       >
-//         {/* Gallery label */}
 //         <div
 //           style={{
 //             display: "flex",
@@ -488,11 +437,11 @@
 //           />
 //         </div>
 
-//         {/* Masonry-style grid */}
+//         {/* Grid: wide image spans full width on top, 3 cells below */}
 //         <div
 //           style={{
 //             display: "grid",
-//             gridTemplateColumns: "repeat(4, 1fr)",
+//             gridTemplateColumns: "repeat(2, 1fr)",
 //             gap: "8px",
 //             maxWidth: "1400px",
 //             margin: "0 auto",
@@ -505,11 +454,8 @@
 //         </div>
 
 //         <style>{`
-//           @media (max-width: 1024px) {
-//             .gallery-grid { grid-template-columns: repeat(3, 1fr) !important; }
-//           }
 //           @media (max-width: 640px) {
-//             .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; }
+//             .gallery-grid { grid-template-columns: 1fr !important; }
 //           }
 //         `}</style>
 //       </div>
@@ -525,7 +471,6 @@
 //           overflow: "hidden",
 //         }}
 //       >
-//         {/* Background glow */}
 //         <div
 //           style={{
 //             position: "absolute",
@@ -543,7 +488,6 @@
 //           }}
 //         />
 
-//         {/* Ghost 40 */}
 //         <div
 //           style={{
 //             position: "absolute",
@@ -614,7 +558,6 @@
 //             next, Arthur. Happy birthday.
 //           </p>
 
-//           {/* Gold divider */}
 //           <div
 //             style={{
 //               width: closingVisible ? "80px" : "0px",
@@ -781,7 +724,15 @@ function GalleryCard({
 
 export default function The40Page() {
   const [heroVisible, setHeroVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { ref: closingRef, visible: closingVisible } = useInView(0.3);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 100);
