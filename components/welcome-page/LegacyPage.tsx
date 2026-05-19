@@ -5,36 +5,36 @@ import { useEffect, useRef, useState } from "react";
 // ── Replace placeholder awards with real ones when available ──
 const awards = [
   {
-    year: "2024",
-    title: "Best Hospitality Entrepreneur",
-    issuer: "Ondo State Business Awards",
+    year: "2015",
+    title: "Certificate of Excellence",
+    issuer: "Sanofi Nigeria",
     description:
-      "Recognised for outstanding contribution to the hospitality and dining industry in Ondo State through the Aristo and Malibu brands.",
+      "Awarded for being the 3rd best CLACIA rep in Nigeria for the year 2015, in recognition of outstanding pharmaceutical sales performance and excellence.",
     icon: "🏆",
   },
   {
-    year: "2023",
-    title: "Excellence in Food & Beverage",
-    issuer: "Nigeria Restaurant Association",
+    year: "2017",
+    title: "Certificate of Recognition",
+    issuer: "Sanofi Nigeria",
     description:
-      "Awarded for setting a new standard in fine dining experiences across Akure with a commitment to quality and cultural identity.",
+      "Recognised for exceptional contribution to the Sanofi brand in 2017, awarded in acknowledgment of leadership and performance excellence in the South-Western region.",
     icon: "🥇",
+  },
+  {
+    year: "2017",
+    title: "Certificate of Excellence — 1st Place",
+    issuer: "Sanofi Nigeria",
+    description:
+      "Awarded for being the 1st best CLACIA rep in Nigeria for the year 2017 — a testament to relentless drive, discipline, and a commitment to being the best.",
+    icon: "◈",
   },
   {
     year: "2022",
     title: "Global Leaders Summit",
-    issuer: "Business & Leadership Magazine",
+    issuer: "Global Leaders Summit",
     description:
-      "Named among the most influential young business leaders driving economic growth in South Western Nigeria.",
+      "Recognised among distinguished leaders at the Global Leaders Summit, receiving both a trophy and certificate of participation for contributions to leadership and enterprise.",
     icon: "✦",
-  },
-  {
-    year: "2021",
-    title: "Brand of the Year — Akure",
-    issuer: "Ondo State Tourism Board",
-    description:
-      "Aristo Afrikana recognised as the defining dining and entertainment brand in Akure, elevating the city's cultural profile.",
-    icon: "◈",
   },
 ];
 
