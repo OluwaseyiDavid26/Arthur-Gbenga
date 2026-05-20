@@ -26,6 +26,7 @@
 // ];
 
 // // ── useInView hook (standalone, no nested components) ──
+
 // function useInView(threshold = 0.15) {
 //   const ref = useRef<HTMLDivElement>(null);
 //   const [visible, setVisible] = useState(false);
@@ -52,8 +53,29 @@
 // }) {
 //   const { ref, visible } = useInView(0.1);
 //   const [hovered, setHovered] = useState(false);
+//   const [paused, setPaused] = useState(false);
+//   const [muted, setMuted] = useState(true);
+//   const videoRef = useRef<HTMLVideoElement>(null);
 
 //   const isVideo = image.src.endsWith(".mp4");
+
+//   const togglePlay = () => {
+//     if (!videoRef.current) return;
+//     if (videoRef.current.paused) {
+//       videoRef.current.play();
+//       setPaused(false);
+//     } else {
+//       videoRef.current.pause();
+//       setPaused(true);
+//     }
+//   };
+
+//   const toggleMute = (e: React.MouseEvent) => {
+//     e.stopPropagation();
+//     if (!videoRef.current) return;
+//     videoRef.current.muted = !videoRef.current.muted;
+//     setMuted(videoRef.current.muted);
+//   };
 
 //   const mediaStyle: React.CSSProperties = {
 //     width: "100%",
@@ -75,13 +97,13 @@
 //         overflow: "hidden",
 //         gridColumn: image.span === "wide" ? "span 2" : "span 1",
 //         gridRow: image.span === "tall" ? "span 2" : "span 1",
-//         // Wide card: taller ratio so the image isn't cropped thin
 //         aspectRatio:
 //           image.span === "wide"
 //             ? "16/9"
 //             : image.span === "tall"
 //               ? "3/4"
 //               : "1/1",
+//         minHeight: "200px", // ← fixes mobile collapse
 //         opacity: visible ? 1 : 0,
 //         transform: visible
 //           ? "translateY(0) scale(1)"
@@ -91,9 +113,11 @@
 //       }}
 //       onMouseEnter={() => setHovered(true)}
 //       onMouseLeave={() => setHovered(false)}
+//       onClick={isVideo ? togglePlay : undefined}
 //     >
 //       {isVideo ? (
 //         <video
+//           ref={videoRef}
 //           src={image.src}
 //           autoPlay
 //           muted
@@ -128,13 +152,80 @@
 //           background: `linear-gradient(to right, transparent, #C9A96E44, transparent)`,
 //         }}
 //       />
+
+//       {/* Video controls — only shown on video cards */}
+//       {isVideo && (
+//         <div
+//           style={{
+//             position: "absolute",
+//             bottom: "10px",
+//             right: "10px",
+//             display: "flex",
+//             gap: "8px",
+//             zIndex: 10,
+//           }}
+//         >
+//           {/* Play/Pause button */}
+//           <button
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               togglePlay();
+//             }}
+//             style={{
+//               background: "rgba(0,0,0,0.55)",
+//               border: "1px solid #C9A96E55",
+//               borderRadius: "50%",
+//               width: "32px",
+//               height: "32px",
+//               display: "flex",
+//               alignItems: "center",
+//               justifyContent: "center",
+//               cursor: "pointer",
+//               color: "#C9A96E",
+//               fontSize: "13px",
+//               backdropFilter: "blur(4px)",
+//             }}
+//           >
+//             {paused ? "▶" : "⏸"}
+//           </button>
+
+//           {/* Mute/Unmute button */}
+//           <button
+//             onClick={toggleMute}
+//             style={{
+//               background: "rgba(0,0,0,0.55)",
+//               border: "1px solid #C9A96E55",
+//               borderRadius: "50%",
+//               width: "32px",
+//               height: "32px",
+//               display: "flex",
+//               alignItems: "center",
+//               justifyContent: "center",
+//               cursor: "pointer",
+//               color: "#C9A96E",
+//               fontSize: "13px",
+//               backdropFilter: "blur(4px)",
+//             }}
+//           >
+//             {muted ? "🔇" : "🔊"}
+//           </button>
+//         </div>
+//       )}
 //     </div>
 //   );
 // }
 
 // export default function The40Page() {
 //   const [heroVisible, setHeroVisible] = useState(false);
+//   const [isMobile, setIsMobile] = useState(false);
 //   const { ref: closingRef, visible: closingVisible } = useInView(0.3);
+
+//   useEffect(() => {
+//     const check = () => setIsMobile(window.innerWidth < 640);
+//     check();
+//     window.addEventListener("resize", check);
+//     return () => window.removeEventListener("resize", check);
+//   }, []);
 
 //   useEffect(() => {
 //     const t = setTimeout(() => setHeroVisible(true), 100);
@@ -615,7 +706,10 @@ const galleryImages = [
   },
 ];
 
-// ── useInView hook (standalone, no nested components) ──
+// ── Module-level registry so all GalleryCards share one Map ──
+const videoRegistry = new Map<number, HTMLVideoElement>();
+
+// ── useInView hook ──
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -632,7 +726,7 @@ function useInView(threshold = 0.15) {
   return { ref, visible };
 }
 
-// ── GalleryCard defined at module level (NOT inside hook) ──
+// ── GalleryCard ──
 function GalleryCard({
   image,
   index,
@@ -642,8 +736,46 @@ function GalleryCard({
 }) {
   const { ref, visible } = useInView(0.1);
   const [hovered, setHovered] = useState(false);
+  // Videos start paused — user must tap to play
+  const [paused, setPaused] = useState(true);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const isVideo = image.src.endsWith(".mp4");
+
+  // Register / unregister this video in the shared map
+  useEffect(() => {
+    if (!isVideo || !videoRef.current) return;
+    videoRegistry.set(index, videoRef.current);
+    return () => {
+      videoRegistry.delete(index);
+    };
+  }, [index, isVideo]);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+
+    if (videoRef.current.paused) {
+      // Pause every other video first
+      videoRegistry.forEach((vid, key) => {
+        if (key !== index) {
+          vid.pause();
+        }
+      });
+      videoRef.current.play();
+      setPaused(false);
+    } else {
+      videoRef.current.pause();
+      setPaused(true);
+    }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setMuted(videoRef.current.muted);
+  };
 
   const mediaStyle: React.CSSProperties = {
     width: "100%",
@@ -665,13 +797,13 @@ function GalleryCard({
         overflow: "hidden",
         gridColumn: image.span === "wide" ? "span 2" : "span 1",
         gridRow: image.span === "tall" ? "span 2" : "span 1",
-        // Wide card: taller ratio so the image isn't cropped thin
         aspectRatio:
           image.span === "wide"
             ? "16/9"
             : image.span === "tall"
               ? "3/4"
               : "1/1",
+        minHeight: "200px",
         opacity: visible ? 1 : 0,
         transform: visible
           ? "translateY(0) scale(1)"
@@ -681,11 +813,13 @@ function GalleryCard({
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={isVideo ? togglePlay : undefined}
     >
       {isVideo ? (
         <video
+          ref={videoRef}
           src={image.src}
-          autoPlay
+          autoPlay={false} // ← no autoplay, user taps to start
           muted
           loop
           playsInline
@@ -693,6 +827,39 @@ function GalleryCard({
         />
       ) : (
         <img src={image.src} alt={image.caption} style={mediaStyle} />
+      )}
+
+      {/* Tap-to-play overlay when paused */}
+      {isVideo && paused && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(0,0,0,0.25)",
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            style={{
+              width: "52px",
+              height: "52px",
+              borderRadius: "50%",
+              background: "rgba(0,0,0,0.55)",
+              border: "1px solid #C9A96E88",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#C9A96E",
+              fontSize: "20px",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            ▶
+          </div>
+        </div>
       )}
 
       {/* Gold shimmer overlay on hover */}
@@ -704,6 +871,7 @@ function GalleryCard({
             ? "linear-gradient(135deg, rgba(201,169,110,0.12) 0%, transparent 60%)"
             : "transparent",
           transition: "background 0.5s ease",
+          pointerEvents: "none",
         }}
       />
 
@@ -716,8 +884,66 @@ function GalleryCard({
           right: 0,
           height: "1px",
           background: `linear-gradient(to right, transparent, #C9A96E44, transparent)`,
+          pointerEvents: "none",
         }}
       />
+
+      {/* Video controls */}
+      {isVideo && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
+            display: "flex",
+            gap: "8px",
+            zIndex: 10,
+          }}
+        >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlay();
+            }}
+            style={{
+              background: "rgba(0,0,0,0.55)",
+              border: "1px solid #C9A96E55",
+              borderRadius: "50%",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "#C9A96E",
+              fontSize: "13px",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            {paused ? "▶" : "⏸"}
+          </button>
+
+          <button
+            onClick={toggleMute}
+            style={{
+              background: "rgba(0,0,0,0.55)",
+              border: "1px solid #C9A96E55",
+              borderRadius: "50%",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "#C9A96E",
+              fontSize: "13px",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            {muted ? "🔇" : "🔊"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -1035,7 +1261,6 @@ export default function The40Page() {
           />
         </div>
 
-        {/* Grid: wide image spans full width on top, 3 cells below */}
         <div
           style={{
             display: "grid",
